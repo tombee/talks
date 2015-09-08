@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to Docker</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { 
+        font-family: 'Yanone Kaffeesatz'; 
+        font-size: 150%;
+      }
+      li {
+        font-size: 40px;
+        margin-top: 0.5em;
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: 400;
+        margin-bottom: 0;
+        margin-top: 20px;
+      }
+      h1 {
+        color: #22354C;
+      }
+      h2, h3 {
+        color: #000000;
+      }
+      .inverse {
+          background-color: #22354C;
+          color: #ffffff;
+          text-shadow: 0 0 20px #222;
+      }
+      a {
+          color: rgb(34, 184, 235);
+          text-decoration: none;
+      }
+      .inverse h1, .inverse h2, .inverse h3 {
+          color: #ffffff;
+      }
+      .avatar {
+        margin-left:auto;
+        margin-right:auto;
+        background-image: url('../media/me.jpg');
+        width: 200px;
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+        border-radius: 50%;
+      }
+      .remark-container {
+          background-color: #222;
+      }
+      .remark-slide-scaler {
+        box-shadow: #111 0px 0px 30px 0px;
+      }
+      .remark-slide-content h1 { font-size: 3em; }
+      .remark-slide-content h2 { font-size: 2em; }
+      .remark-slide-content h3 { font-size: 1.6em; }
+      .remark-code, .remark-inline-code { font-size: 36px; font-family: 'Ubuntu Mono'; }
+      .red { color: #fa0000; }
+      .gray { color: #ccc; }
+      .small { font-size: 70%; }
+      .big { font-size: 140%; }
+      .underline { text-decoration: underline; }
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      .pic {
+        vertical-align: middle;
+        text-align: center;
+        padding: 0 0 0 0 !important;
+      }
+      img {
+        max-width: 100%;
+        max-height: 450px;
+      }
+      .quote {
+        background: #eee;
+        border-left: 10px solid #ccc;
+        margin: 1.5em 10px;
+        padding: 0.5em 10px;
+        quotes: "\201C""\201D""\2018""\2019";
+        font-style: italic;
+      }
+      .quote:before {
+        color: #ccc;
+        content: open-quote;
+        font-size: 4em;
+        line-height: 0.1em;
+        margin-right: 0.25em;
+        vertical-align: -0.4em;
+      }
+      .quote p {
+        display: inline;
+      }
+      .icon img {
+        height: 1em;
+      }
+      li p { line-height: 1.25em; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+name: default 
+layout: true
+class: default
+---
+name: center 
+layout: true
+class: center, middle
+---
+name: inverse
+layout: true
+class: center, middle, inverse
+---
+template: inverse
+
+![Docker Logo](../media/large_v-dark-trans.png)
+# Introduction 
+---
+template: center
+
+<div class="avatar"></div>
+# Who am I?
+### Tom Barlow ([@tomwbarlow](https://twitter.com/tomwbarlow))
+### Software Engineer at Docker
+---
+template: inverse
+
+# What is Docker?
+---
+template: inverse
+
+## Let's think about modern application development for a moment...
+---
+template: default
+
+# Agile Development
+- Focus on delivering the MVP
+- Short iterations (sprints)
+- Continuous Deployment/Delivery
+---
+template: default
+
+# Microservices
+- Polyglot platforms
+- Many languages
+- Simultaneous use of SQL, NoSQL
+- The right tool for the right job
+---
+template: default
+
+# Cloud
+- Deploy our microservices to lots of VMS
+- Cloud Providers: AWS, DigitalOcean, Azure &amp; OpenStack
+- Elastic scaling
+- 12 Factor Apps (http://12factor.net/)
+---
+template: default
+
+# How do we manage this?
+- DevOps
+- Configuration Management (Ansible, Fabric, Chef, Puppet)
+- Lots of patience 
+---
+class: inverse
+
+![Docker](../media/small_v-dark-trans.png)
+
+## Build, ship and run...  Any app, anywhere
+---
+template: default
+
+# Docker Engine
+- The core docker component
+- A single binary that is both the CLI client __and__ the daemon
+- Builds, creates and manages containers
+---
+#Container
+### *an object for holding or transporting something*
+---
+template: default
+
+# Docker Containers
+- The standard unit in which an application can reside
+- Packages an app and its dependencies together
+- Isolated from other containers
+- One container per app / service
+---
+template: inverse
+
+# Demo
+## Containers in Action 
+---
+template: default
+
+# What just happened?
+- The `ubuntu` image provides a rootfs, along with a set of userland tools that we are familiar with, e.g. `apt-get`, `bash`, `ifconfig`, etc. (These are often required to get our application's dependencies installed)
+- We have an isolated workspace that has:
+  - Its own filesystem
+  - Its own process namespace
+  - Its own network stack
+---
+template: default
+
+# VM comparison
+- We don't incur the overhead of hardware virtualization
+- We don't need to run an entire OS, kernel &amp; drivers -- we share the host machine's kernel
+- Images are smaller
+- Fast startup time
+- Tradeoff: Technically we don't have **total** isolation
+---
+class: pic
+
+![Demo](images/demo.png)
+---
+
+# Build system
+
+### `Dockerfile` = recipe describing the build process
+
+### Easy to learn (similar to shell scripting)
+
+### Fast (caching system)
+
+### Reliable, reproducible
+
+--
+
+### Let's have our cake ### and eat it too
+  <br/>
+  <br/>(Compared to classic scripting, or configuration
+  <br/>management systems like Puppet, Chef, Salt, Ansible...)
+
+---
+
+class: pic
+
+![Demo](images/demo.png)
+
+---
+
+# Image format
+
+### Problem: VM images are big
+
+### Solution 1: container images are smaller
+
+  ### doesn't need hardware support, kernel, drivers ...
+
+  ### separate handling of logs, metrics, backups ...
+
+### Solution 2: images broken down into layers
+
+  ### 1 layer = 1 build step
+
+  ### example: base system, packages, code, config
+
+  ### only transfer updated layers
+
+---
+
+# Distribution protocol
+
+### Problem: it's both too simple and too complicated
+
+  ### "just do `tar` or `rsync` ...
+
+--
+
+  ### ... with these 5 cryptic options, and it works"
+
+--
+
+  ### (mostly)
+
+--
+
+### Solution: Docker Registry
+
+  ### transfer layers via an open REST API
+
+  ### open source reference implementation
+
+  ### free service for public images
+    <br/>(à la GitHub)
+
+---
+
+class: pic
+
+![Demo](images/demo.png)
+
+---
+
+# Ecosystem: images
+
+### ~100 official images
+
+  ### Linux distros
+    <br/>(Debian, Ubuntu, CentOS, Fedora, ...)
+
+  ### components
+    <br/>(MySQL, Redis, PostgreSQL, MongoDB, NGINX...)
+
+  ### languages
+    <br/>(Python, Ruby, Java, Go, Node...)
+
+  ### applications
+    <br/>(Wordpress...)
+
+### ~150,000 contributed images
+
+---
+
+# Ecosystem: code
+
+### ~100,000 GitHub repositories have a `Dockerfile`
+
+### ~1000 contributors to Docker code
+
+### Thousands of projects integrating with Docker
+
+### Some official tools:
+
+  ### Machine (deploy Docker hosts)
+  ### Compose (manage multi-container applications)
+  ### Swarm (cluster multiple Docker hosts together)
+
+---
+
+# One example: Docker Compose
+
+### Assemble application from multiple containers
+
+### Define parameters of each container
+
+  ### how to build it
+
+  ### how to run it
+    <br/>(command, arguments, environment...)
+
+  ### network port mappings
+
+  ### linking between containers
+
+---
+
+class: pic
+
+![Demo](images/demo.png)
+
+---
+
+class: title
+
+# How to get started?
+
+---
+
+# If you're in a hurry
+  
+### OS X, Windows: Docker Toolbox + boot2docker
+
+  ### tiny VM image (less than 30 MB)
+
+  ### works on (most) physical and virtual machines
+
+### Linux: get.docker.com
+
+  ### shell script
+
+  ### usable with Cloud Init or `|sh`.red[*]
+
+.footnote[.red[*] Make sure you use http.red[s] and nobody gets hurt!]
+
+---
+
+# If you like reading
+
+### docs.docker.com
+
+### start with "get started" (duh!)
+  <br/>(it's written in good old "howto" style)
+
+### reference documentations
+
+---
+
+# If you like looking at / listening to
+
+### training.docker.com
+
+### Free, official training videos
+
+  ### Intro to Docker
+    <br/>(general concepts)
+
+  ### Docker Fundamentals
+    <br/>(first steps with Docker)
+
+  ### Docker Operations
+    <br/>(using Machine, Swarm, Compose)
+
+---
+
+# How to "Dockerize" my app?
+
+1. Write a `Dockerfile` for the main component
+
+2. Write a `docker-compose.yml` for the app itself
+
+3. Use Docker+Compose during development
+
+4. Use Docker+Compose for testing/QA/acceptance...
+
+5. (Optionally) setup CI/CD
+
+6. Go to production with Docker+Compose
+   <br/>(static resource scheduling)
+
+If you have 100s of apps with 100s of containers (each):
+<br/>setup a self-service container platform for your developers
+<br/>(using e.g. Swarm, Mesos, Kubernetes...)
+
+---
+
+# Questions ?
+
+### [@tomwbarlow](https://twitter.com/tomwbarlow) <br/> [@docker](https://twitter.com/docker)
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-0.5.9.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

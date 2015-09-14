@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to Docker</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { 
+        font-family: 'Yanone Kaffeesatz'; 
+        font-size: 150%;
+      }
+      li {
+        font-size: 40px;
+        margin-top: 0.5em;
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: 400;
+        margin-bottom: 0;
+        margin-top: 20px;
+      }
+      h1 {
+        color: #22354C;
+      }
+      h2, h3 {
+        color: #000000;
+      }
+      .inverse {
+          background-color: #22354C;
+          color: #ffffff;
+          text-shadow: 0 0 20px #222;
+      }
+      a {
+          color: rgb(34, 184, 235);
+          text-decoration: none;
+      }
+      .inverse h1, .inverse h2, .inverse h3 {
+          color: #ffffff;
+      }
+      .avatar {
+        margin-left:auto;
+        margin-right:auto;
+        background-image: url('../media/me.jpg');
+        width: 200px;
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+        border-radius: 50%;
+      }
+      .remark-container {
+          background-color: #222;
+      }
+      .remark-slide-scaler {
+        box-shadow: #111 0px 0px 30px 0px;
+      }
+      .remark-slide-content h1 { font-size: 3em; }
+      .remark-slide-content h2 { font-size: 2em; }
+      .remark-slide-content h3 { font-size: 1.6em; }
+      .remark-code, .remark-inline-code { font-size: 36px; font-family: 'Ubuntu Mono'; }
+      .red { color: #fa0000; }
+      .gray { color: #ccc; }
+      .small { font-size: 70%; }
+      .big { font-size: 140%; }
+      .underline { text-decoration: underline; }
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      .pic {
+        vertical-align: middle;
+        text-align: center;
+        padding: 0 0 0 0 !important;
+      }
+      img {
+        max-width: 100%;
+        max-height: 450px;
+      }
+      .quote {
+        background: #eee;
+        border-left: 10px solid #ccc;
+        margin: 1.5em 10px;
+        padding: 0.5em 10px;
+        quotes: "\201C""\201D""\2018""\2019";
+        font-style: italic;
+      }
+      .quote:before {
+        color: #ccc;
+        content: open-quote;
+        font-size: 4em;
+        line-height: 0.1em;
+        margin-right: 0.25em;
+        vertical-align: -0.4em;
+      }
+      .quote p {
+        display: inline;
+      }
+      .icon img {
+        height: 1em;
+      }
+      li p { line-height: 1.25em; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+name: default 
+layout: true
+class: default
+---
+name: center 
+layout: true
+class: center, middle
+---
+name: inverse
+layout: true
+class: center, middle, inverse
+---
+template: inverse
+
+![Docker Logo](../media/large_v-dark-trans.png)
+# A Brief History of Containers 
+---
+template: center
+
+<div class="avatar"></div>
+# Who am I?
+### Tom Barlow ([@tomwbarlow](https://twitter.com/tomwbarlow))
+### Software Engineer at Docker
+---
+template: default
+
+# `chroot`
+- "Change root" -- changes the apparent root directory and so cannot access files/commands outside
+- First mention of `chroot` appears to be _Version 7 Unix_ in 1979
+- Added to BSD by Bill Joy on 18 March 1982 – 17 months before 4.2BSD was released – in order to test its installation and build system
+- Easy to 'bounce out' of the filesystem (TODO)
+---
+template: default
+
+# `chroot` jails
+- A security mechanism
+- Used for running code that is dubious
+- Why would anyone run 'dubious' code (TODO)?
+---
+template: default
+
+# OS Virtualization
+- Sun introduced 'zones'
+- A great way of selling really *big* servers
+- Required OS modification (TODO)
+---
+template: default
+
+# IBM 1401
+- Everyone was writing code to run on the IBM 1401
+- (TODO)
+---
+template: default
+
+# New hardware came along (TODO)
+- But nobody was happy about havinng to rewrite code
+---
+template: default
+
+# The 'Liberator'
+- Honeywell 200 introduced in the early 1960s to 'liberate' people from IBM
+- Could execute IBM 1401 programs without re-compilation or re-assembly
+---
+template: default
+
+# System 360
+- Offered an emulation mode to run IBM 1401 code
+- Emulation used a combination of hardware, microcode and an emulation program
+- Sysetm had to be halted to boot into this emulation program
+---
+
+# Questions ?
+
+### [@tomwbarlow](https://twitter.com/tomwbarlow) <br/> [@docker](https://twitter.com/docker)
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-0.5.9.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

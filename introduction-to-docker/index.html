@@ -52,12 +52,12 @@ template: default
 - Polyglot platforms
 - Many languages
 - Simultaneous use of SQL, NoSQL
-- The right tool for the right job
+- The right tool for the job
 ---
 template: default
 
 # Cloud
-- Deploy our microservices to lots of VMS
+- Deploy our microservices to lots of VMs
 - Cloud Providers: AWS, DigitalOcean, Azure &amp; OpenStack
 - HA, clustered environments &amp; elastic scaling
 - 12 Factor Apps (http://12factor.net/)
@@ -159,24 +159,22 @@ template: inverse
 ---
 template: default
 
-# Build system
-- A `Dockerfile` is a recipe that describes the build process
-- Follows a familiar shell scripting approach
+# Building Images
+- A `Dockerfile` is a recipe that describes the build process, it follows a familiar shell scripting approach
 - Incremental builds are fast (caching)
 - Reproducible, we start `FROM` a known state 
-- State management and idempotency becomes difficult to manage, even with great modern tools like Ansible/Chef
 ---
 template: default
 
 # Image format
-- Images consist of layers -- each layer is a diff from the layer beneath it
+- Images consist of layers,  each layer is a diff from the layer beneath it
 - Each build step (`RUN`, `ADD`, `ENV`) becomes a layer in the built image
-- Layers are hash-chained together -- a change to a layer invalidates all layers above it
+- Layers are hash-chained together, a change to a layer invalidates all layers above it
 ---
 template: default
 
 # Image Distribution
-- Images are named with a tag `<repository>/<name>`
+- Images are named: `<user>/<name>:<tag>`
 - We store them in a registry (Hub, DTR or private registry)
 - Image layers are transferred to/from a registry using the REST API
   - `docker push` to send and image to a registry

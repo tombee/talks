@@ -1,0 +1,42 @@
+$ docker run \
+  --name=cadvisor \
+  --volume=/:/rootfs:ro \
+  --volume=/var/run:/var/run:rw \
+  --volume=/sys:/sys:ro \
+  --volume=/var/lib/docker/:/var/lib/docker:ro \
+  --publish=8080:8080 \
+  --detach=true \
+  google/cadvisor:latest
+
+
+$ docker run \
+  --name=nodeexporter \
+  --detach=true \
+  --publish=9100:9100 \
+  prom/node-exporter
+
+$ docker run \
+  --name=alertmanager \
+  --volume=$(pwd)/alertmanager.conf:/alertmanager.conf \
+  --publish=9093:9093 \
+  --detach=true \
+  prom/alertmanager -config.file=/alertmanager.conf
+
+$ docker run \
+  --name prometheus \
+  --volume=$(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml \
+  --volume=$(pwd)/alert.rules:/etc/prometheus/alert.rules \
+  --link=cadvisor:cadvisor \
+  --link=nodeexporter:nodeexporter \
+  --link=alertmanager:alertmanager \
+  --publish=9090:9090 \
+  --detach=true \
+  prom/prometheus -config.file=/etc/prometheus/prometheus.yml -alertmanager.url=http://alertmanager:9093
+
+$ docker run \
+  --volume=$(pwd)/file.sqlite3:/tmp/prom/file.sqlite3 \
+  --env="DATABASE_URL=sqlite3:/tmp/prom/file.sqlite3" \
+  --link=prometheus:prometheus \
+  --publish=3000:3000 \
+  --detach=true \
+  prom/promdash

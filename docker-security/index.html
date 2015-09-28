@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Docker Security</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="../lib/main.css"/>
+  </head>
+  <body>
+    <textarea id="source">
+name: default 
+layout: true
+class: default
+---
+name: center 
+layout: true
+class: center, middle
+---
+name: inverse
+layout: true
+class: center, middle, inverse
+---
+template: inverse
+
+![Docker Logo](../media/large_v-dark-trans.png)
+# Security
+---
+template: center
+
+<div class="avatar"></div>
+# Who am I?
+### Tom Barlow ([@tomwbarlow](https://twitter.com/tomwbarlow))
+### Software Engineer at Docker
+---
+template: inverse
+
+# "The only truly secure system is one that is powered off, cast in a block of concrete and sealed in a lead-lined room with armed guards - and even then I have my doubts."
+### Gene Spafford
+---
+template: inverse
+
+# "Over 30% of Official Images in Docker Hub Contain High Priority Security Vulnerabilities"
+### <a href="http://www.banyanops.com/blog/analyzing-docker-hub/">banyanops.com</a>, 26 May 2015
+---
+template: inverse
+
+# Isn't this great?
+---
+template: default
+# Static Analysis of Containers
+- This study shows that we can write code to audit *all* public images in the Hub for known security vulnerabilities 
+--
+
+- If we can write code to do it, we can automate it!
+--
+
+- <a href="https://jpetazzo.github.io/2015/05/27/docker-images-vulnerabilities/">More on this</a> from Jérôme Petazzoni <a href="http://twitter.com/jpetazzo">@jpetazzo</a>
+---
+template: inverse
+
+# "The shift to a new DevOps model where developers are responsible for packages needed by their applications implies that the developers now take on the new onus of maintaining packages"
+### <a href="http://www.banyanops.com/blog/analyzing-docker-hub/">banyanops.com</a>, 26 May 2015
+---
+# Questions ?
+
+### [@tomwbarlow](https://twitter.com/tomwbarlow) <br/> [@docker](https://twitter.com/docker)
+
+    </textarea>
+    <script src="../lib/remark.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

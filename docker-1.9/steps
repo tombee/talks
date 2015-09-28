@@ -1,0 +1,24 @@
+# Docker 1.9 Networking Demo
+
+# Grab Docker experimental
+$ curl -L https://experimental.docker.com/builds/Darwin/x86_64/docker-latest > /usr/local/bin/dockerx
+$ chmod +x /usr/local/bin/dockerx
+
+# Create a machine to run our discovery/kv service
+$ docker-machine create \
+    --driver="virtualbox" \
+    discovery
+
+# Bootstrap etcd
+$ dockerx $(docker-machine config discovery) run \
+    --detach \
+    --hostname="kv" \
+    --publish="2379:2379" \
+    microbox/etcd:2.1.1 --advertise-client-urls=http://kv:2379 --listen-client-urls=http://kv:2379 --listen-peer-urls http://kv:2380
+
+# Create a swarm
+$ docker-machine --debug create \
+    --driver="virtualbox" \
+    --engine-opt="kv-store=etcd:$(docker-machine ip discovery):8500" \
+    --engine-label="com.docker.network.driver.overlay.bind_interface=eth0" \
+    swarm-0

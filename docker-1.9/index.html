@@ -179,7 +179,7 @@ $ dockerx volume create --name=my-site
 - Using a named volume
 
 ```shell
-dockerx run --detach \
+$ dockerx run --detach \
     --name="my-nginx" \
     --volume="my-site:/usr/share/nginx/html:ro" \
     --publish="80:80" \
@@ -198,6 +198,77 @@ $ dockerx run --rm -it \
 
 $ echo "Docker is awesome" &gt; /html/index.html
 ```
+
+---
+template: default 
+
+# Volume Plugins
+- Plugins allow custom volume storage
+    - s3, ebs, keywhiz, vault
+- Simple interface for writing your own
+- For example, vault plugin to share secrets between containers
+
+---
+template: default 
+
+# Vault Demo
+
+- Requires fuse for securely mounting a filesystem in userspace
+```shell
+$ sudo apt-get install fuse
+```
+
+- We need Hashicorp's vault &amp; calavera's docker-volume-vault binary
+```shell
+$ go get github.com/calavera/docker-volume-vault
+$ go get github.com/hashicorp/vault
+$ sudo mv ~/.go/bin/docker-volume-vault /usr/local/bin/docker-volume-vault
+```
+---
+template: default
+
+# Vault
+
+- Run the vault server (in dev mode for demo purposes)
+```shell
+$ sudo docker-volume-vault \
+  -token 9a8716bc-1c2a-f2d2-14c8-b7dbc48fb21c \
+  -url http://192.168.0.21:8200
+```
+
+- Write our secret
+```shell
+$ vault write secret/database/password value=mypa55w0rd
+```
+
+---
+template: default
+
+# Setting up our plugin
+
+- Run the plugin
+```shell
+$ sudo docker-volume-vault -token &lt;token&gt; -url http://127.0.0.1:8200
+```
+
+- Create a named volume for using the vault driver
+```shell
+$ docker volume create --driver="vault" --name="database"
+```
+
+---
+template: default
+
+# Testing it out
+
+```shell
+$ docker run --rm -it \
+    --volume-driver="vault" \
+    --volume="database:/data" alpine ash
+    
+$ cat /data/secret/database/password
+```
+
 ---
 template: inverse
 

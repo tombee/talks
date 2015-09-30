@@ -1,0 +1,70 @@
+Lots of negative comments on Docker
+- "Containers don't contain"
+  https://opensource.com/business/14/7/docker-security-selinux
+
+- "... total systematic failure of all logic related to image security"
+  https://titanous.com/posts/docker-insecurity
+
+- The shared surface between applications is now the kernel
+- Denial of service of resources (cpu, memory, storage)
+- Poisoned images
+- Secrets management?
+
+
+- Container breakouts are treated as unlikely but possible, cgroups and namespaces are relatively new -- we're probably going to see exploits
+    - Use VMs to segregate groups of containers
+
+- Docker privileges == root privileges
+- If you're using the Docker remote API, only allow access via TLS with authenticate client on AND only listen on internal network/VPN
+
+- Users are not namespaced (yet!), root in container == root on host
+- Don't run your applications as root:
+    RUN groupadd -r nobody && useradd -r -g nobody nobody
+    USER nobody
+
+- Set container FS to read-only
+    docker run --read-only debian bash touch /test
+
+- Set bind mounted volumes to read-only:
+    docker run -v $(pwd):/data debian touch /data/test
+
+- SELinux/AppArmor
+
+- Set cpu shares
+    docker run -d myimage
+    docker run -d -c 512 myimage
+
+- set memory limits
+    docker run -m 512m myimage
+
+- Disable inter-container communication (but retain link communication)
+    docker daemon --icc="false" --iptables="true"
+
+- Using Docker Hub images
+    - Only use images that come from someone you trust
+    - Automated builds and linked Dockerfile that you can inspect
+    - Docker pull by digest:
+        docker pull debian@....
+
+- Package vulnerabilities & system binaries
+    $ find / -perm +6000 -type f -exec ls -ld {} \;
+    - Run a minimal distribution to reduce attack surface
+
+- The real issue is application vulnerabilities
+
+- Investigation of an attack
+    $ docker diff my_container
+    .. Okay, we see something changed?
+    $ docker commit my_container
+    abcdef1234567890
+    $ docker kill my_container
+    $ docker run new_container
+    $ docker run abcdef1234567890 /bin/bash
+
+
+- Secrets
+    - Bake into image: NO!
+    - Environment variables -- can inspect them
+    - Volumes -- too much hassle
+    - KV store
+    

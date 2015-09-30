@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>1.9</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="../lib/main.css"/>
+  </head>
+  <body>
+    <textarea id="source">
+name: default 
+layout: true
+class: default
+---
+name: center 
+layout: true
+class: center, middle
+---
+name: inverse
+layout: true
+class: center, middle, inverse
+---
+template: inverse
+
+![Docker Logo](../media/large_v-dark-trans.png)
+# 1.9
+---
+template: center
+
+<div class="avatar"></div>
+# Who am I?
+### Tom Barlow ([@tomwbarlow](https://twitter.com/tomwbarlow))
+### Software Engineer at Docker
+---
+template: default
+
+# Create a swarm - Consul
+
+- First let's create a machine for consul to run on:
+
+```shell
+$ docker-machine create \
+    -d virtualbox \
+    consul
+```
+
+- Now we can run consul:
+
+```shell
+$ docker $(docker-machine config consul) run -d \
+    -p "8500:8500" \
+    -h "consul" \
+    progrium/consul -server -bootstrap
+```
+
+---
+template: default
+
+# Create a swarm - Swarm Node 0
+
+- Create swarm node 0 with consul as the discovery option *and* KV store
+- We also bind our overlay driver to `eth1`
+
+```shell
+$ docker-machine create \
+    -d virtualbox \
+    --swarm \
+    --swarm-master \
+    --swarm-discovery="consul://$(docker-machine ip consul):8500" \
+    --engine-opt="cluster-store=consul://$(docker-machine ip consul):8500" \
+    --engine-label="com.docker.network.driver.overlay.bind_interface=eth1" \
+    swarm-0 
+```
+
+---
+template: default
+
+# Create a swarm - Swarm Node 1
+
+- Create swarm node 1
+- Notice the `neighbor_ip` label, this is used for serf cluster membership 
+
+```shell
+$ docker-machine create \
+    -d virtualbox \
+    --swarm \
+    --swarm-discovery="consul://$(docker-machine ip consul):8500" \
+    --engine-opt="cluster-store=consul://$(docker-machine ip consul):8500" \
+    --engine-label="com.docker.network.driver.overlay.bind_interface=eth1" \
+    --engine-label="com.docker.network.driver.overlay.neighbor_ip=$(docker-machine ip swarm-0)" \
+    swarm-1
+```
+---
+template: default
+
+# Introducing "docker network"
+
+```shell
+$ dockerx network --help
+
+Usage:  docker network [OPTIONS] COMMAND [OPTIONS]
+
+Commands:
+  create                   Create a network
+  connect                  Connect container to a network
+  disconnect               Disconnect container from a network
+  inspect                  Display detailed network information
+  ls                       List all networks
+  rm                       Remove a network
+```
+
+---
+template: default
+
+# Create an overlay network
+
+```shell
+$ dockerx $(docker-machine config swarm-0) \
+    network create -d overlay demo
+```
+
+---
+template: default
+
+# Time to test it out
+
+- Create a long running container on swarm-0
+
+```shell
+dockerx $(docker-machine config --swarm swarm-0) \
+    run -d --name long-running \
+    --env="constraint:node==swarm-0" \
+    --net="demo" \
+    busybox top
+```
+
+- A simple busybox container on swarm-1 to ping `long-running` on swarm-0
+
+```shell
+dockerx $(docker-machine config --swarm swarm-0) \
+    run -it --rm \
+    --env="constraint:node==swarm-1" \
+    --net="demo" \
+    busybox ping long-running
+```
+
+---
+template: default
+
+# How does this work with compose?
+
+- Fire up our compose app
+
+```shell
+$ eval $(docker-machine env --swarm swarm-0)
+$ docker-compose up -d
+```
+
+- Let's see where it's running
+
+```shell
+$ docker $(docker-machine config --swarm swarm-0) \
+    ps -a
+```
+---
+template: inverse
+
+# Named Volumes
+---
+template: default
+
+# Using a named volume
+
+- Create a named volume 
+
+```shell
+$ dockerx volume create --name=my-site
+```
+
+- Using a named volume
+
+```shell
+dockerx run --detach \
+    --name="my-nginx" \
+    --volume="my-site:/usr/share/nginx/html:ro" \
+    --publish="80:80" \
+    nginx
+```
+
+---
+template: default
+
+# Adding data to the volume
+
+```shell
+$ dockerx run --rm -it \
+    --volume="my-site:/html" \
+    busybox
+
+$ echo "Docker is awesome" &gt; /html/index.html
+```
+---
+template:  default
+
+# User Namespaces
+
+- a.k.a. root re-mapping
+- IBMer Phil Estes leading this work
+- Root in container != root outside of container
+- <a href="https://github.com/docker/docker/pull/12648">PR #12648</a>
+---
+# Questions ?
+
+### [@tomwbarlow](https://twitter.com/tomwbarlow) <br/> [@docker](https://twitter.com/docker)
+
+    </textarea>
+    <script src="../lib/remark.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

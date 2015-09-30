@@ -36,14 +36,57 @@ template: inverse
 # "The only truly secure system is one that is powered off, cast in a block of concrete and sealed in a lead-lined room with armed guards - and even then I have my doubts."
 ### Gene Spafford
 ---
-template: inverse
+template: default
 
-# "Over 30% of Official Images in Docker Hub Contain High Priority Security Vulnerabilities"
-### <a href="http://www.banyanops.com/blog/analyzing-docker-hub/">banyanops.com</a>, 26 May 2015
+# But that's not very practical..
+- Security is a spectrum, where on the spectrum is often due to multiple factors
+--
+
+  - Data sensitivity
+--
+
+  - Attack surface/Accessibility
+--
+
+  - Cost
+--
+
+  - Performance
+---
+template: default
+
+# Microservices
+- Lots of small applications that work together, rather than a monolith
+--
+
+- We like to isolate applications for practical, dependency &amp; security reasons
+--
+
+- Isolation is often achieved by VMs, but this this can be expensive and we take a performance hit
+---
+template: default
+
+# Application Isolation by Containers
+- Each container runs 1 application, multiple containers per host
+- We can retain resource, filesystem, network and process isolation
+- Shared surface is the kernel
+- We can group related microservices onto a single host for improved performance
 ---
 template: inverse
 
-# Isn't this great?
+# But can I rely upon containers for isolation?
+---
+template: inverse
+
+# Container Breakouts
+- cgroups and namespaces are relatively young
+--
+
+- I think of breakouts as "unlikely, but possible"
+--
+
+- 
+
 ---
 template: default
 # Static Analysis of Containers

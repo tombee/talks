@@ -68,3 +68,50 @@ Lots of negative comments on Docker
     - Volumes -- too much hassle
     - KV store
     
+
+---
+
+ - The need for an image signing framework
+ - The Update Framework (TUF) was invented in 2009 by a bunch of researchers
+ - Notary is an open source tool that Docker launched at DockerCon which is an opinionated implementation of TUF
+ - Docker Content Trust is an opinionated implementation of Notary
+
+Why not GPG?
+- Unfair comparison to GPG
+- GPG is a message format, it's not meant to provide security on its own
+- Can't simply apply GPG to RPM signing
+ - We sign an RPM with a key, expiration 10 years
+ - We distribute software, everything is fine -- servers verify the image
+ - 2 years later, an attacker gains a man-in-the middle position, when one of your hosts attempts to update a package -- they're going to serve you a valid signed but vulnerable package from 2 years ago -- that has shellshock (replay attack)
+- If the GPG key is comprimsed, we have to go to all clients and bootstrap new keys
+- Lots more to securing distribution of software than just signing content
+
+"A software update system is secure if it can be sure that it knows about the latest available updates in a timely manner, and any files it downs are the correct files, and no harm results from checking or downloading files".
+- The Update Framework
+
+The Update Framework (TUF)
+- Developed for Tor to protect against nation state attackers
+- Best standard for secure software distribution that we have at the moment
+Core concepts
+ - Freshness: 
+   - everything has an expiration to resist against replay attacks
+   - guarantee that not only is the content signed, but it is the latest version of the software
+ - Online vs. Offline keys:
+   - Online key equivalent to GPG key, but inherently more vulnerable since it has to be online signing packages
+   - Offline key that's kept in vault/bank/secure location, used for key rotation
+   - This allows us to survive key comprimise
+
+ - Signed collections instead of individual files:
+   - Traditional signing is done on a file/package basis, TUF instead uses collections.  So we can think of it as a snapshot of files that will be distributed to clients and they shouldn't see anything else.  This defends against package mismatch attacks. 
+
+- TUF Internals
+  - Four different keys, ranging from short to long expirations:
+    - Timestamp key (kept online)
+    - Snapshot key
+    - Targets key
+    - Root key
+
+  - Comprimisation of timestamp key means that you lose freshness guarantees, but an attacker still cannot sign a package as if they were you
+  - Snapshots key
+  - Targets equivalent of GPG key (workhorse), thing that's online signing these files -- kept online.
+  - Root key is kept offline and sole objective is to sign the other three keys

@@ -33,6 +33,14 @@ template: center
 ---
 template: default
 
+# Overview
+
+- Networking
+- Volume Management
+- Volume Plugins
+---
+template: default
+
 # Create a swarm - Consul
 
 - First let's create a machine for consul to run on:
@@ -231,13 +239,12 @@ template: default
 
 - Run the vault server (in dev mode for demo purposes)
 ```shell
-$ sudo docker-volume-vault \
-  -token 9a8716bc-1c2a-f2d2-14c8-b7dbc48fb21c \
-  -url http://192.168.0.21:8200
+$ vault server -dev
 ```
 
 - Write our secret
 ```shell
+$ export VAULT_ADDR='http://127.0.0.1:8200'
 $ vault write secret/database/password value=mypa55w0rd
 ```
 

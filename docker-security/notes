@@ -115,3 +115,10 @@ Core concepts
   - Snapshots key
   - Targets equivalent of GPG key (workhorse), thing that's online signing these files -- kept online.
   - Root key is kept offline and sole objective is to sign the other three keys
+
+
+- Notary is an opinionated implementation of TUF
+  - Tries to abstract and simplify the framework a little bit
+  - 2 servers
+    - Notary signer, online but not on the front-end
+    - Notary server, front-end only has public data

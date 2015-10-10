@@ -171,6 +171,7 @@ template: default
 - Images consist of layers,  each layer is a diff from the layer beneath it
 - Each build step (`RUN`, `ADD`, `ENV`) becomes a layer in the built image
 - Layers are hash-chained together, a change to a layer invalidates all layers above it
+- The hash-chain forms a cache
 ---
 template: default
 
@@ -196,6 +197,140 @@ template: default
 - Languages (Python, Ruby, Java, Go, Node...)
 - Applications (Wordpress...)
 - ~150,000 contributed images
+
+---
+template: inverse
+
+# Docker Machine
+## Machine lets you create Docker hosts on your computer, on cloud providers, and inside your own data center.
+---
+template: default
+
+# Supported Providers
+- virtualbox
+- ec2 
+- azure
+- digitalocean 
+- google 
+- openstack 
+- rackspace
+- vmwarevsphere
+---
+template: default
+
+# Machine and boot2docker
+- This is an essential part of the Docker Toolbox for Windows/OSX users
+- Machine provides users an easy way of creating a Docker/Linux VM
+- The image used for these local VMs is boot2docker
+- boot2docker is based on tinylinux and provides a fully functional Docker engine
+---
+template: default
+
+# docker-machine
+- We can create a Docker engine locally like so:
+
+```shell
+$ docker-machine create -d virtualbox tom
+```
+
+- This allows us to then "point" our Docker client at it
+
+```shell
+$ eval $(docker-machine env tom)
+$ docker info
+```
+
+---
+template: default
+
+# Cloud Provisioning
+- An example of provisioning on Amazon
+
+```shell
+$ docker-machine create -d amazonec2 \
+    --amazonec2-vpc-id="vpc-524c6037" \
+    demo
+```
+
+- We can now securely interact with our public cloud engine:
+
+```shell
+$ eval $(docker-machine env demo)
+$ docker info
+```
+---
+template: inverse
+
+# Docker Compose
+## Compose is a tool for defining and running multi-container applications with Docker.
+---
+template: default
+
+# docker-compose.yml
+- A manifest that describes a collection of *services* that make up an *application*
+- An example compose file:
+
+```
+web:
+  image: tombee/counter
+  ports:
+   - "80:5000"
+  links:
+   - redis
+redis:
+  image: redis
+```
+
+---
+template: default
+
+# docker-compose.yml build steps
+- We can also define services that include a build step:
+
+```
+web:
+  build: .  &lt;-- use Dockerfile in current directory 
+  ports:
+   - "80:5000"
+  links:
+   - redis
+redis:
+  image: redis
+```
+---
+template: default
+
+# docker-compose CLI
+- Run any build steps:
+
+```shell
+$ docker-compose build
+```
+
+- To start the services:
+
+```shell
+$ docker-compose up
+```
+
+- Stop the services
+
+```shell
+$ docker-compose stop
+```
+
+---
+template: inverse
+
+# Docker Swarm
+## Docker Swarm is native clustering for Docker. It allows you create and access to a pool of Docker hosts using the full suite of Docker tools. 
+---
+template: default
+# Installation
+- Windows: <a href="https://www.docker.com/toolbox">https://www.docker.com/toolbox</a>
+- OSX: "brew cask install docker-toolbox"
+
+- Linux: apt/yum repos: <a href="https://blog.docker.com/2015/07/new-apt-and-yum-repos/">https://blog.docker.com/2015/07/new-apt-and-yum-repos/</a>
 
 ---
 # Questions ?

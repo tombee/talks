@@ -5,6 +5,6 @@ FROM nginx:1.9.4
 
 MAINTAINER Docker Education Team <education@docker.com>
 
-RUN echo 'Hi my name is Tom, I am in your container' \
+RUN echo 'Docker is awesome.' \
     >/usr/share/nginx/html/index.html
 

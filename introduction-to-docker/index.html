@@ -35,76 +35,6 @@ template: inverse
 
 # What is Docker?
 ---
-template: inverse
-
-## Let's take a look at modern application development...
----
-template: default
-
-# Agile Development
-- Small teams
-- Focus on delivering the MVP
-- Short iterations (sprints)
-- Continuous Deployment/Delivery
----
-template: default
-
-# Microservices
-- Polyglot platforms
-- Many languages
-- Simultaneous use of SQL, NoSQL
-- The right tool for the job
----
-template: default
-
-# Cloud
-- Deploy our microservices to lots of VMs
-- Cloud Providers: AWS, DigitalOcean, Azure &amp; OpenStack
-- HA, clustered environments &amp; elastic scaling
-- 12 Factor Apps (http://12factor.net/)
----
-template: default
-
-# How do we manage this today?
-- VMs for development, using tools like Vagrant 
-- DevOps expertise for deploying to VMs in the cloud
-- Isolating apps in their own VMs
-- Configuration Management (Ansible, Fabric, Chef, Puppet)
-- Lots of patience :) 
----
-# So what's the problem?
----
-template: default
-# Complex development environments
-
-- Lots of different applications and dependencies are required for polyglot platforms, running at specific versions
-- Maybe you even need multiple versions of the same applications installed, e.g. 
-  - Java 1.7 &amp; Maven 2 for App A 
-  - Java 1.8 &amp; Maven 3.3 for App B
---
-
-- **Solution**: Create a VM that has all this stuff and distribute this around on a USB stick :)
-
----
-template: default
-
-# Virtual Machine Management
-- **Size**: VMs their images are large, impractical to store/transfer
-- **Performance**: 
-    - VMs come with a hardware virtualization overhead
-    - An OS install per VM
-    - Slow boot-up time
-- **Portability**: vmdk vs. vdi vs. ami
-- **Hardware-centric**: Tooling is focused on machine operators
----
-template: default
-
-# Configuration Management
-- State management is **hard**, especially in the dynamic environments of today
-- End up with complex shellscripts, cookbooks, playbooks to manage the installation, upgrade and removal of each component
-- Transient failures -- we couldn't get a particular package at the moment.. now what?
-- Installing dependencies every time you want to provision something new is often slow
----
 class: inverse
 
 ![Docker](../media/small_v-dark-trans.png)
@@ -117,9 +47,6 @@ template: default
 - The core docker component
 - A single binary that is both the CLI client __and__ the daemon
 - Builds, creates and manages containers
----
-# Container
-## *an object for holding or transporting something*
 ---
 template: default
 
@@ -150,8 +77,6 @@ template: default
   - namespaces (filesystem, process and network)
   - cgroups for resource management
 - copy-on-write: Docker uses a union filesystem -- this means that containers often will never need to write to disk
----
-# "Docker is like chroot on steroids"
 ---
 template: inverse
 
@@ -331,7 +256,10 @@ template: default
 - OSX: "brew cask install docker-toolbox"
 
 - Linux: apt/yum repos: <a href="https://blog.docker.com/2015/07/new-apt-and-yum-repos/">https://blog.docker.com/2015/07/new-apt-and-yum-repos/</a>
+---
+template: default
 
+<img class="full-screen" src="../media/docker_users.png"></img>
 ---
 # Questions ?
 

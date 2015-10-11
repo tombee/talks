@@ -78,6 +78,14 @@ template: default
   - cgroups for resource management
 - copy-on-write: Docker uses a union filesystem -- this means that containers often will never need to write to disk
 ---
+template: default
+
+# Client/Server
+- The docker daemon exposes a REST(ish) API
+- By default it's a unix socket at `/var/run/docker.sock`
+- But you can open it up as a TCP socket to the network
+- Please use TLS if you do...
+---
 template: inverse
 
 # Demo
@@ -95,8 +103,7 @@ template: default
 # Image format
 - Images consist of layers,  each layer is a diff from the layer beneath it
 - Each build step (`RUN`, `ADD`, `ENV`) becomes a layer in the built image
-- Layers are hash-chained together, a change to a layer invalidates all layers above it
-- The hash-chain forms a cache
+- Layers are hash-chained together, this is used to form the image cache
 ---
 template: default
 
@@ -149,40 +156,10 @@ template: default
 - The image used for these local VMs is boot2docker
 - boot2docker is based on tinylinux and provides a fully functional Docker engine
 ---
-template: default
+template: inverse
 
-# docker-machine
-- We can create a Docker engine locally like so:
-
-```shell
-$ docker-machine create -d virtualbox tom
-```
-
-- This allows us to then "point" our Docker client at it
-
-```shell
-$ eval $(docker-machine env tom)
-$ docker info
-```
-
----
-template: default
-
-# Cloud Provisioning
-- An example of provisioning on Amazon
-
-```shell
-$ docker-machine create -d amazonec2 \
-    --amazonec2-vpc-id="vpc-524c6037" \
-    demo
-```
-
-- We can now securely interact with our public cloud engine:
-
-```shell
-$ eval $(docker-machine env demo)
-$ docker info
-```
+# Demo
+## Machine in Action 
 ---
 template: inverse
 
@@ -223,27 +200,10 @@ redis:
   image: redis
 ```
 ---
-template: default
+template: inverse
 
-# docker-compose CLI
-- Run any build steps:
-
-```shell
-$ docker-compose build
-```
-
-- To start the services:
-
-```shell
-$ docker-compose up
-```
-
-- Stop the services
-
-```shell
-$ docker-compose stop
-```
-
+# Demo
+## Compose in Action 
 ---
 template: inverse
 

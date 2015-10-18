@@ -1,8 +1,0 @@
-web:
-  image: tombee/counter
-  net: demo
-  ports:
-   - "80:5000"
-redis:
-  image: redis
-  net: demo

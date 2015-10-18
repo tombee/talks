@@ -1,3 +1,3 @@
-FROM nginx:1.9.4
+FROM nginx
 
-RUN echo 'Hello World!' >/usr/share/nginx/html/index.html
+RUN echo 'Hello world!' >/usr/share/nginx/html/index.html

@@ -1,0 +1,48 @@
+docker-machine create \
+    -d virtualbox \
+    consul
+
+docker $(docker-machine config consul) run -d \
+    -p "8500:8500" \
+    -h "consul" \
+    progrium/consul -server -bootstrap
+
+docker-machine create \
+    -d virtualbox \
+    --swarm \
+    --swarm-image="swarm:1.0.0-rc1" \
+    --swarm-master \
+    --swarm-discovery="consul://$(docker-machine ip consul):8500" \
+    --engine-opt="cluster-advertise=192.168.99.101:2376" \
+    --engine-opt="cluster-store=consul://$(docker-machine ip consul):8500" \
+    --engine-label="com.docker.network.driver.overlay.bind_interface=eth1" \
+    swarm-0
+
+docker-machine create \
+    -d virtualbox \
+    --swarm \
+    --swarm-image="swarm:1.0.0-rc1" \
+    --swarm-discovery="consul://$(docker-machine ip consul):8500" \
+    --engine-opt="cluster-advertise=192.168.99.102:2376" \
+    --engine-opt="cluster-store=consul://$(docker-machine ip consul):8500" \
+    --engine-label="com.docker.network.driver.overlay.bind_interface=eth1" \
+    swarm-1
+
+eval $(docker-machine env --swarm swarm-0)
+
+docker network ls
+# overlay network is missing
+
+# so create one
+docker network create -d overlay multihost
+
+docker run -d \
+    --name="long-running" \
+    --net="multihost" \
+    --env="constraint:node==swarm-0" \
+    busybox top
+
+docker run -it --rm \
+    --net="multihost" \
+    --env="constraint:node==swarm-1" \
+    busybox ping long-running

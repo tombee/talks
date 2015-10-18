@@ -1,0 +1,41 @@
+kv:
+    image: microbox/etcd:2.1.1
+    hostname: kv
+    command: --advertise-client-urls=http://kv:2379 --listen-client-urls=http://kv:2379 --listen-peer-urls http://kv:2380
+
+proxy:
+    image: ehazlett/docker-proxy:latest
+    volumes:
+        - "/var/run/docker.sock:/var/run/docker.sock"
+    ports:
+        - "2375"
+
+swarm:
+    image: swarm:latest
+    command: m --host tcp://0.0.0.0:3375 proxy:2375
+    links:
+        - "proxy:proxy"
+    ports:
+        - "3375"
+
+controller:
+    build: .
+    dockerfile: Dockerfile.build
+    entrypoint: /bin/bash
+    command: -c "make build && cd controller && ./controller -D server -k etcd://kv:2379 -d tcp://swarm:3375 --disable-usage-info --disable-tracking --support-image dockerorca/dsinfo:latest"
+    working_dir: /go/src/github.com/docker/orca
+    volumes:
+        - "./controller/static/dist:/go/src/github.com/docker/orca/controller/static/dist"
+    links:
+        - "kv:kv"
+        - "swarm:swarm"
+    ports:
+        - "8080:8080"
+
+media:
+    image: node
+    command: bash -c "make media && cd controller/static && npm run watch"
+    working_dir: /go/src/github.com/docker/orca
+    volumes:
+        - ".:/go/src/github.com/docker/orca"
+
